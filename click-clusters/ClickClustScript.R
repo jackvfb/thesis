@@ -21,9 +21,6 @@ library(densityClust)
 library(rfPermute)
 library(randomForest)
 
-study <- bindStudies(pd_mtc, pp_mtc, ks_mtc) # all training data
-clicks <- getClickData(s) %>% best_clicks() # get tidy data
-
 # SUBSET DATA -------------------------------------------------------------
 
 # There are too many clicks in the full training set to cluster in a reasonable
@@ -31,9 +28,9 @@ clicks <- getClickData(s) %>% best_clicks() # get tidy data
 # the sample is limited by Dall's porpoise, which has not much more than 500 clicks
 # in the database.
 
-samp <- clicks %>% 
+samp <- nbhf_clicks %>% 
   group_by(species) %>% 
-  slice_sample(n=500) %>% # select 500 clicks at random from each species
+  slice_sample(n=200) %>% # select 200 clicks at random from each species
   ungroup()
 
 
@@ -45,34 +42,77 @@ c <- samp %>%
   mutate(id = 1:n()) %>%
   filter(complete.cases(.))
 
-# make distance matrix
+# separate data into 1, 2, 3, peaked
+c1 <- c %>%
+  filter(peak2 == 0) # 1 peak only
+
+c2 <- c %>%
+  filter(peak2 != 0 & peak3 == 0) # 2 peaks only
+
+c3 <- c %>%
+  filter(peak3 != 0) # 3 peaks only
+
+
+
+# MDS, by number of Peaks -----------------------------------------------------------
+
+# make distance matrix, then vizualize clusters using MDS
+doMDS <- function(x) {
+  x.dist <- x %>%
+    select(-species) %>%
+    column_to_rownames("id") %>%
+    scale() %>% # important step is to scale
+    dist()
+  
+  x.mds <- x.dist %>%
+    cmdscale(k=4) %>% # Use max four dimensions
+    as.data.frame %>%
+    setNames(paste0("PC", 1:ncol(.))) %>%
+    mutate(species = x$species)
+  
+  return(x.mds)
+}
+
+c1.mds <- doMDS(c1)
+c2.mds <- doMDS(c2)
+c3.mds <- doMDS(c3)
+
+# Some weird artifacts in the clusters. Separation looks weak.
+c1.mds %>%
+  ggplot(aes(PC1, PC2, color=species)) +
+  geom_point()
+
+c2.mds %>%
+  ggplot(aes(PC1, PC2, color=species)) +
+  geom_point()
+
+c3.mds %>%
+  ggplot(aes(PC1, PC2, color=species)) +
+  geom_point()
+
+# More artifacts. Separation looks weak.
+c1.mds %>%
+  ggplot(aes(PC2, PC3, color=species)) +
+  geom_point()
+
+c2.mds %>%
+  ggplot(aes(PC2, PC3, color=species)) +
+  geom_point()
+
+c3.mds %>%
+  ggplot(aes(PC2, PC3, color=species)) +
+  geom_point()
+
+# Can also try with all clicks, but there are some banding artifacts
+
+# DENSITY CLUSTERS --------------------------------------------------------
+# Clusters did not appear to separate very well using MDS. Try density clustering.
+
 c.dist <- c %>%
   select(-species) %>%
   column_to_rownames("id") %>%
   scale() %>% # important step is to scale
   dist()
-
-# MDS -------------------------------------------------------------
-# An initial look at the data, not using densityClust but using MDS.
-
-c.mds <- c.dist %>%
-  cmdscale(k=4) %>% # Use max four dimensions
-  as.data.frame %>%
-  setNames(paste0("PC", 1:ncol(.))) %>%
-  mutate(species = c$species)
-
-# Some weird artifacts in the clusters. Separation looks weak.
-c.mds %>%
-  ggplot(aes(PC1, PC2, color=species)) +
-  geom_point()
-
-# More artifacts. Separation looks weak.
-c.mds %>%
-  ggplot(aes(PC2, PC3, color=species)) +
-  geom_point()
-
-# DENSITY CLUSTERS --------------------------------------------------------
-# Clusters did not appear to separate very well using MDS. Try density clustering.
 
 c.cl <- densityClust(c.dist) # allow dc (aura) to be generated automatically
 c.cl <- findClusters(c.cl) # user chooses from decision graph at this stage

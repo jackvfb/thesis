@@ -12,9 +12,6 @@ library(vegan)
 library(tidyverse)
 library(identidrift)
 library(PAMpal)
-
-s <- bindStudies(pd_mtc, pp_mtc, ks_mtc) #training data set
-c <- getClickData(s) #get tidy data
 ```
 
 ## Intro and objectives
@@ -40,7 +37,7 @@ This size discrepancy will influence later stages of this method and we may want
 ```{r}
 #| label: fig-bins
 #| echo: false
-c %>%
+nbhf_clicks %>%
   ggplot(aes(x=peak, color=species, by=eventId))+
   geom_freqpoly(binwidth=1) +
   facet_wrap(~species, ncol=1, scale="free")
@@ -53,7 +50,7 @@ Once the counts are available for all the events, the dissimilarity index betwee
 #| label: fig-peak-clusters
 
 #perform binning procedure using "peak" variable
-pk <- identidrift::eventbin(c, peak)
+pk <- identidrift::eventbin(nbhf_clicks, peak)
 
 #set seed for reproducibility
 set.seed(123)
@@ -65,7 +62,7 @@ nmds <- vegan::metaMDS(dist)
 #make cluster plot
 scores(nmds) %>%
     as_tibble(rownames = "eventId") %>%
-    left_join(select(c, species, eventId, eventLabel), by="eventId") %>% 
+    left_join(select(nbhf_clicks, species, eventId, eventLabel), by="eventId") %>% 
     ggplot(aes(x = NMDS1, y = NMDS2, color=species))+
     geom_point()+
     # facet_wrap(~eventLabel) +
@@ -74,23 +71,23 @@ scores(nmds) %>%
 
 
 ```{r}
-#| include: false
 #| label: fig-other-clusters
+#| include: false
 
 clust <- function(mat, title){
   dist <- vegdist(mat, method = "bray")
   nmds <- metaMDS(dist)
   scores(nmds) %>%
     as_tibble(rownames = "eventId") %>%
-    left_join(select(c, species, eventId, eventLabel), by="eventId") %>% 
+    left_join(select(nbhf_clicks, species, eventId, eventLabel), by="eventId") %>% 
     ggplot(aes(x = NMDS1, y = NMDS2, color=species))+
     geom_point()+
     # facet_wrap(~eventLabel) +
     ggtitle(title)
 }
 
-bw <- eventbin(c, BW_3dB)
-ctr <- eventbin(c, centerkHz_3dB)
+bw <- eventbin(nbhf_clicks, BW_3dB)
+ctr <- eventbin(nbhf_clicks, centerkHz_3dB)
 clust(bw, "bandwidth 3dB")
 clust(ctr, "centerfreq 3dB")
 ```
@@ -102,7 +99,7 @@ As a next step, I created a null model by shuffling the clicks to redistribute t
 #| echo: false
 #| results: hide
 
-null <- mutate(c, eventId=sample(eventId))
+null <- mutate(nbhf_clicks, eventId=sample(eventId))
 npk <- eventbin(null, peak) #perform binning procedure
 clust(npk, "null peak")
 ```
