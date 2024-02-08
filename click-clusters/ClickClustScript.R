@@ -6,7 +6,7 @@
 
 # Note there is one stage of this that requires user input, which will need to 
 # be done manually every time the script is run. It is the stage where the user 
-# must select thresholds from the decision graph (line 77). These thresholds are
+# must select thresholds from the decision graph. These thresholds are
 # chosen to segregate points with high values of rho, delta, and their product,
 # gamma. These become the centroids of the clusters that are later plotted by
 # densityClust. Since this decision is somewhat arbitrary, it will depend on who
@@ -24,9 +24,8 @@ library(randomForest)
 # SUBSET DATA -------------------------------------------------------------
 
 # There are too many clicks in the full training set to cluster in a reasonable
-# amount of time using my computer. I will reduce size of data set. The size of
-# the sample is limited by Dall's porpoise, which has not much more than 500 clicks
-# in the database.
+# amount of time using my computer. I will reduce size of data set. Value chosen
+# so as not to exceed size of smallest (species) group
 
 samp <- nbhf_clicks %>% 
   group_by(species) %>% 
@@ -42,66 +41,66 @@ c <- samp %>%
   mutate(id = 1:n()) %>%
   filter(complete.cases(.))
 
-# separate data into 1, 2, 3, peaked
-c1 <- c %>%
-  filter(peak2 == 0) # 1 peak only
-
-c2 <- c %>%
-  filter(peak2 != 0 & peak3 == 0) # 2 peaks only
-
-c3 <- c %>%
-  filter(peak3 != 0) # 3 peaks only
+# # separate data into 1, 2, 3, peaked
+# c1 <- c %>%
+#   filter(peak2 == 0) # 1 peak only
+# 
+# c2 <- c %>%
+#   filter(peak2 != 0 & peak3 == 0) # 2 peaks only
+# 
+# c3 <- c %>%
+#   filter(peak3 != 0) # 3 peaks only
 
 
 
 # MDS, by number of Peaks -----------------------------------------------------------
 
-# make distance matrix, then vizualize clusters using MDS
-doMDS <- function(x) {
-  x.dist <- x %>%
-    select(-species) %>%
-    column_to_rownames("id") %>%
-    scale() %>% # important step is to scale
-    dist()
-  
-  x.mds <- x.dist %>%
-    cmdscale(k=4) %>% # Use max four dimensions
-    as.data.frame %>%
-    setNames(paste0("PC", 1:ncol(.))) %>%
-    mutate(species = x$species)
-  
-  return(x.mds)
-}
-
-c1.mds <- doMDS(c1)
-c2.mds <- doMDS(c2)
-c3.mds <- doMDS(c3)
-
-# Some weird artifacts in the clusters. Separation looks weak.
-c1.mds %>%
-  ggplot(aes(PC1, PC2, color=species)) +
-  geom_point()
-
-c2.mds %>%
-  ggplot(aes(PC1, PC2, color=species)) +
-  geom_point()
-
-c3.mds %>%
-  ggplot(aes(PC1, PC2, color=species)) +
-  geom_point()
-
-# More artifacts. Separation looks weak.
-c1.mds %>%
-  ggplot(aes(PC2, PC3, color=species)) +
-  geom_point()
-
-c2.mds %>%
-  ggplot(aes(PC2, PC3, color=species)) +
-  geom_point()
-
-c3.mds %>%
-  ggplot(aes(PC2, PC3, color=species)) +
-  geom_point()
+# # make distance matrix, then vizualize clusters using MDS
+# doMDS <- function(x) {
+#   x.dist <- x %>%
+#     select(-species) %>%
+#     column_to_rownames("id") %>%
+#     scale() %>% # important step is to scale
+#     dist()
+#   
+#   x.mds <- x.dist %>%
+#     cmdscale(k=4) %>% # Use max four dimensions
+#     as.data.frame %>%
+#     setNames(paste0("PC", 1:ncol(.))) %>%
+#     mutate(species = x$species)
+#   
+#   return(x.mds)
+# }
+# 
+# c1.mds <- doMDS(c1)
+# c2.mds <- doMDS(c2)
+# c3.mds <- doMDS(c3)
+# 
+# # Some weird artifacts in the clusters. Separation looks weak.
+# c1.mds %>%
+#   ggplot(aes(PC1, PC2, color=species)) +
+#   geom_point()
+# 
+# c2.mds %>%
+#   ggplot(aes(PC1, PC2, color=species)) +
+#   geom_point()
+# 
+# c3.mds %>%
+#   ggplot(aes(PC1, PC2, color=species)) +
+#   geom_point()
+# 
+# # More artifacts. Separation looks weak.
+# c1.mds %>%
+#   ggplot(aes(PC2, PC3, color=species)) +
+#   geom_point()
+# 
+# c2.mds %>%
+#   ggplot(aes(PC2, PC3, color=species)) +
+#   geom_point()
+# 
+# c3.mds %>%
+#   ggplot(aes(PC2, PC3, color=species)) +
+#   geom_point()
 
 # Can also try with all clicks, but there are some banding artifacts
 
@@ -112,12 +111,12 @@ c.dist <- c %>%
   select(-species) %>%
   column_to_rownames("id") %>%
   scale() %>% # important step is to scale
-  dist()
+  dist(method="euclidean")
 
 c.cl <- densityClust(c.dist) # allow dc (aura) to be generated automatically
-c.cl <- findClusters(c.cl) # user chooses from decision graph at this stage
+c.cl <- findClusters(c.cl, rho=10, delta=4) # user chooses from decision graph at this stage
 plotDensityClust(c.cl) # with four centroids chosen, most of the gamma-plot elbow seems to be captured.
-saveRDS(c.cl, "C:/Users/jackv/Documents/thesis-clusters/c_cl.rds") # if needed again
+saveRDS(c.cl, "clusters_v2.rds") # if needed again
 table(c$species, c.cl$clusters)
 
 # RANDOM FOREST --------------------------------------------------------------
