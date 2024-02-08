@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Jackson Vanfleet-Brown">
+<meta name="dcterms.date" content="2024-02-08">
 
-<title>What are the results of our methods for defining events?</title>
+<title>Thesis Results Notebook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,22 +73,88 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#making-events" id="toc-making-events" class="nav-link active" data-scroll-target="#making-events">1. Making Events</a>
+  <ul class="collapse">
+  <li><a href="#sec-templates" id="toc-sec-templates" class="nav-link" data-scroll-target="#sec-templates">Selection of Template Clicks</a>
+  <ul class="collapse">
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  </ul></li>
+  <li><a href="#sec-MTC" id="toc-sec-MTC" class="nav-link" data-scroll-target="#sec-MTC">MTC Module PG</a>
+  <ul class="collapse">
+  <li><a href="#methodology-1" id="toc-methodology-1" class="nav-link" data-scroll-target="#methodology-1">Methodology</a></li>
+  <li><a href="#results-1" id="toc-results-1" class="nav-link" data-scroll-target="#results-1">Results</a></li>
+  </ul></li>
+  <li><a href="#sec-customR" id="toc-sec-customR" class="nav-link" data-scroll-target="#sec-customR">Custom event definition</a>
+  <ul class="collapse">
+  <li><a href="#methodology-2" id="toc-methodology-2" class="nav-link" data-scroll-target="#methodology-2">Methodology</a></li>
+  <li><a href="#results-2" id="toc-results-2" class="nav-link" data-scroll-target="#results-2">Results</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#clustering" id="toc-clustering" class="nav-link" data-scroll-target="#clustering">2. Clustering</a>
+  <ul class="collapse">
+  <li><a href="#sec-PAMpal" id="toc-sec-PAMpal" class="nav-link" data-scroll-target="#sec-PAMpal">Extracting click features from events and comparing species</a>
+  <ul class="collapse">
+  <li><a href="#methodology-3" id="toc-methodology-3" class="nav-link" data-scroll-target="#methodology-3">Methodology</a></li>
+  <li><a href="#results-3" id="toc-results-3" class="nav-link" data-scroll-target="#results-3">Results</a></li>
+  </ul></li>
+  <li><a href="#sec-ev-clusters" id="toc-sec-ev-clusters" class="nav-link" data-scroll-target="#sec-ev-clusters">Cluster based on event</a>
+  <ul class="collapse">
+  <li><a href="#methodology-4" id="toc-methodology-4" class="nav-link" data-scroll-target="#methodology-4">Methodology</a></li>
+  <li><a href="#results-4" id="toc-results-4" class="nav-link" data-scroll-target="#results-4">Results</a></li>
+  </ul></li>
+  <li><a href="#sec-density-clusters" id="toc-sec-density-clusters" class="nav-link" data-scroll-target="#sec-density-clusters">Density Cluster clicks</a>
+  <ul class="collapse">
+  <li><a href="#methodology-5" id="toc-methodology-5" class="nav-link" data-scroll-target="#methodology-5">Methodology</a></li>
+  <li><a href="#results-5" id="toc-results-5" class="nav-link" data-scroll-target="#results-5">Results</a></li>
+  </ul></li>
+  <li><a href="#sec-density-clusters-sp" id="toc-sec-density-clusters-sp" class="nav-link" data-scroll-target="#sec-density-clusters-sp">Density Cluster clicks, by species</a>
+  <ul class="collapse">
+  <li><a href="#methodology-6" id="toc-methodology-6" class="nav-link" data-scroll-target="#methodology-6">Methodology</a></li>
+  <li><a href="#results-6" id="toc-results-6" class="nav-link" data-scroll-target="#results-6">Results</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#model-classifier" id="toc-model-classifier" class="nav-link" data-scroll-target="#model-classifier">Model classifier</a></li>
+  <li><a href="#data-appendix" id="toc-data-appendix" class="nav-link" data-scroll-target="#data-appendix">Data Appendix</a>
+  <ul class="collapse">
+  <li><a href="#sec-data-nbhf_clicks" id="toc-sec-data-nbhf_clicks" class="nav-link" data-scroll-target="#sec-data-nbhf_clicks"><code>nbhf_clicks</code></a></li>
+  <li><a href="#sec-data-template" id="toc-sec-data-template" class="nav-link" data-scroll-target="#sec-data-template"><code>template</code></a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">What are the results of our methods for defining events?</h1>
+<h1 class="title">Thesis Results Notebook</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jackson Vanfleet-Brown </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 8, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -96,39 +164,233 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="setup" class="level2">
-<h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(identidrift)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-</section>
-<section id="intro" class="level2">
-<h2 class="anchored" data-anchor-id="intro">Intro</h2>
-<p>In the methods we outlined the process for how we defined events.</p>
+<div class="callout-title-container flex-fill">
+Notebook organization
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Results are organized in association with the methodological step which generated them.</p>
+<p>The Table of Contents reflects this organizational scheme</p>
+</div>
+</div>
+<section id="making-events" class="level1">
+<h1>1. Making Events</h1>
+<p>First step of the study was to define events. This is associated with three constituent methodologies.</p>
 <ol type="1">
-<li>The first part of that was to use a template click with the MTC module to generate match scores for all clicks in each database.</li>
-<li>After that we used a custom script to construct the events. The script output some data that is consolidated into the <code>template</code> data object.</li>
-<li>All the events that were defined in step 2 were then used to train the classifier. This final selection of data used to train the model is available in the <code>nbhf_clicks</code> data object</li>
+<li>Selection of template clicks <a href="#sec-templates" class="quarto-xref">Section&nbsp;1.1</a></li>
+<li>Using PG to generate MTC scores <a href="#sec-MTC" class="quarto-xref">Section&nbsp;1.2</a></li>
+<li>Using custom R script to define events <a href="#sec-customR" class="quarto-xref">Section&nbsp;1.3</a></li>
 </ol>
-</section>
-<section id="questions" class="level2">
-<h2 class="anchored" data-anchor-id="questions">Questions</h2>
+<section id="sec-templates" class="level2">
+<h2 class="anchored" data-anchor-id="sec-templates">Selection of Template Clicks</h2>
+<section id="methodology" class="level3">
+<h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
 <ul>
-<li>Did our methods fail to define any events, that should have been included i.e.&nbsp;did it result in any <strong>False Negatives</strong>?
-<ul>
-<li>Approach: evaluate distribution of match scores for all clicks that are <strong>not</strong> included in events that made it into the training set.</li>
-<li>Use <code>template</code> data to plot this distribution. See <strong>?@fig-template</strong>.</li>
-</ul></li>
-<li>Did our methods identify any <strong>False Positives</strong>?
-<ul>
-<li>This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.</li>
-</ul></li>
+<li>Chose template clicks representing high-quality clicks</li>
+<li>All are saved in the <code>identidrift::template_clicks</code> data object <a href="#sec-data-template" class="quarto-xref">Section&nbsp;4.2</a></li>
+<li>There were 4 total, 2 for Dall’s porpoise and 1 for each other species.</li>
 </ul>
-<p>The end result of that process</p>
-<p>Some questions that we could answer to give insight into our results</p>
+</section>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<p>This is important for those who are interested in seeing the exact profiles of these types of signals and could be helpful for people studying NBHF clicks in other regions, to compare to what we consider to be a high-quality click signal</p>
+</section>
+</section>
+<section id="sec-MTC" class="level2">
+<h2 class="anchored" data-anchor-id="sec-MTC">MTC Module PG</h2>
+<section id="methodology-1" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-1">Methodology</h3>
+<ul>
+<li>Used MTC module to generate match scores for all database clicks.</li>
+<li>The match scores are saved in the <code>identidrift::template</code> data object.</li>
+</ul>
+</section>
+<section id="results-1" class="level3">
+<h3 class="anchored" data-anchor-id="results-1">Results</h3>
+</section>
+</section>
+<section id="sec-customR" class="level2">
+<h2 class="anchored" data-anchor-id="sec-customR">Custom event definition</h2>
+<section id="methodology-2" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-2">Methodology</h3>
+<ul>
+<li>Used custom script to construct the events. All the events were saved to a new database of training data.</li>
+<li>The training data is saved in the <code>identidrift::nbhf_clicks</code> object.</li>
+<li>Clicks not included in the training set were not used for any further analysis.</li>
+</ul>
+</section>
+<section id="results-2" class="level3">
+<h3 class="anchored" data-anchor-id="results-2">Results</h3>
+<ul>
+<li>What was the recall and precision?</li>
+</ul>
+<p>I would like to make some comparisons in the distribution of match scores across clicks that were included in events, versus those that did not get included.</p>
+<ul>
+<li><p>Approach: evaluate distribution of match scores for all clicks that are <strong>not</strong> included in events that made it into the training set. - Use <code>template</code> data to plot this distribution.</p></li>
+<li><p>False negatives – This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.</p></li>
+</ul>
+<p><strong>Clicks not included in events are, by and large, poor template matches.</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(template)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First thing we will do to evaluate distributions is subset `template` so that we can distinguish between clicks inside events and those not inside events</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> template <span class="sc">%&gt;%</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">inev=</span><span class="fu">case_when</span>(type<span class="sc">==</span><span class="dv">101</span> <span class="sc">~</span> <span class="cn">TRUE</span>, <span class="at">.default=</span><span class="cn">FALSE</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Then get the best match score for each click across all the templates</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> t <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(db, UID, type, <span class="fu">ends_with</span>(<span class="st">"thresh"</span>), inev) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">best=</span><span class="fu">pmax</span>(template<span class="sc">$</span>Pd_1_thresh, template<span class="sc">$</span>Pd_2_thresh, template<span class="sc">$</span>Pp_thresh,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>     template<span class="sc">$</span>Ksp_thresh))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Then join with species and eventId so we can look at distributions across individual events</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>j1 <span class="ot">&lt;-</span> nbhf_clicks <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(species, db) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">db =</span> <span class="fu">str_remove</span>(<span class="fu">basename</span>(db), <span class="st">" - Copy.sqlite3"</span>))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> t <span class="sc">%&gt;%</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(j1, <span class="at">by=</span><span class="st">"db"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> nbhf_clicks <span class="sc">%&gt;%</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(UID, eventId) <span class="sc">%&gt;%</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(t, <span class="at">by=</span><span class="st">"UID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>These distributions show, probably with a significant difference, that clicks not included in events have lower match scores than those included in events. Suggesting that the script did a good job of placing highly matched clicks in events.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 134 rows containing non-finite values (`stat_ydensity()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="eval-events_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There are however some high-scoring clicks that did not get included into events, likely because they were isolated and thus did not meet the criteria for an event. To get a sense of just how many high quality clicks were excluded, lets look at the percentile for the threshold value among the not-included clicks</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `pctile = map_dbl(...)`.
+Caused by warning in `.x$best &lt; threshVal`:
+! longer object length is not a multiple of shorter object length</code></pre>
+</div>
+</div>
+<p>We see from this that</p>
+<ul>
+<li><p>for harbor porpoise, 13.2723371% of non-event clicks were above the threshold.</p></li>
+<li><p>for Dall’s porpoise, 0.5567271% of non-event clicks were above the threshold.</p></li>
+<li><p>for <em>Kogia</em>, 7.826087% of non-event clicks were above the threshold.</p></li>
+<li><p>Did our methods fail to define any events, that should have been included i.e.&nbsp;did it result in any <strong>False Negatives</strong>?</p></li>
+<li><p>Did our methods identify any <strong>False Positives</strong>?</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="clustering" class="level1">
+<h1>2. Clustering</h1>
+<p>Next step of the study was to cluster to discover associations between events and/or clicks indicative of species classification. Broken down into two steps:</p>
+<ol type="1">
+<li>Use PAMpal to extract click features <a href="#sec-PAMpal" class="quarto-xref">Section&nbsp;2.1</a></li>
+<li>Cluster based on event <a href="#sec-ev-clusters" class="quarto-xref">Section&nbsp;2.2</a></li>
+<li>Density cluster based on clicks <a href="#sec-density-clusters" class="quarto-xref">Section&nbsp;2.3</a></li>
+<li>Density cluster, within species, based on clicks <a href="#sec-density-clusters-sp" class="quarto-xref">Section&nbsp;2.4</a></li>
+</ol>
+<section id="sec-PAMpal" class="level2">
+<h2 class="anchored" data-anchor-id="sec-PAMpal">Extracting click features from events and comparing species</h2>
+<section id="methodology-3" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-3">Methodology</h3>
+<ul>
+<li>From the database with the training events labeled, we then used PAMpal to extract standard set of features from each click.</li>
+<li>What are the average or generalized spectra and concatenated spectrogram for each different species? In other words, what are the patterns that unify each species and distinguish it from other species?</li>
+<li>What are the distributions of the standard click features across all the groups?</li>
+<li>The training data is saved in the <code>nbhf_clicks</code> object <a href="#sec-data-nbhf_clicks" class="quarto-xref">Section&nbsp;4.1</a></li>
+</ul>
+</section>
+<section id="results-3" class="level3">
+<h3 class="anchored" data-anchor-id="results-3">Results</h3>
+</section>
+</section>
+<section id="sec-ev-clusters" class="level2">
+<h2 class="anchored" data-anchor-id="sec-ev-clusters">Cluster based on event</h2>
+<section id="methodology-4" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-4">Methodology</h3>
+<ul>
+<li>Used nmds with community ecology tactics</li>
+</ul>
+</section>
+<section id="results-4" class="level3">
+<h3 class="anchored" data-anchor-id="results-4">Results</h3>
+<ul>
+<li>Does clustering suggest that there are differences between species?</li>
+<li>Does clustering suggest that, for an individual species, there are differences between events?</li>
+</ul>
+</section>
+</section>
+<section id="sec-density-clusters" class="level2">
+<h2 class="anchored" data-anchor-id="sec-density-clusters">Density Cluster clicks</h2>
+<section id="methodology-5" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-5">Methodology</h3>
+<ul>
+<li>Used <code>densityClust</code> with <code>rho</code> and <code>delta</code> chosen in advance or manually chosen?</li>
+</ul>
+</section>
+<section id="results-5" class="level3">
+<h3 class="anchored" data-anchor-id="results-5">Results</h3>
+<ul>
+<li>Does clustering suggest that there are differences between species?</li>
+</ul>
+</section>
+</section>
+<section id="sec-density-clusters-sp" class="level2">
+<h2 class="anchored" data-anchor-id="sec-density-clusters-sp">Density Cluster clicks, by species</h2>
+<section id="methodology-6" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-6">Methodology</h3>
+<ul>
+<li>Used <code>densityClust</code> with <code>rho</code> and <code>delta</code> chosen in advance or manually chosen?</li>
+</ul>
+</section>
+<section id="results-6" class="level3">
+<h3 class="anchored" data-anchor-id="results-6">Results</h3>
+<ul>
+<li>Does clustering suggest that, for an individual species, there are differences between events?</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="model-classifier" class="level1">
+<h1>Model classifier</h1>
+<p><strong>IN PROGRESS</strong></p>
+</section>
+<section id="data-appendix" class="level1">
+<h1>Data Appendix</h1>
+<section id="sec-data-nbhf_clicks" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data-nbhf_clicks"><code>nbhf_clicks</code></h2>
+</section>
+<section id="sec-data-template" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data-template"><code>template</code></h2>
+<p>You can see, this data includes for each UID (26491 total):</p>
+<ul>
+<li>match scores, across all 4 templates</li>
+<li><code>_thresh</code> columns appear to be copies of <code>_match</code> columns</li>
+<li>a <code>type</code> field which I think is related to the click classifier label given in PG</li>
+<li>The number of clicks in the training data set is 4685 and the number of clicks in the <code>template</code> dataset having <code>type==101</code> is 4748. There is obviously a small discrepancy here but still leads me to conclude that filtering the <code>template</code> data for clicks with <code>type==101</code> is shorthand for filtering clicks included in events.</li>
+<li>This can be verified by examining counts, by event</li>
+</ul>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(template)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-template" class="cell anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-template-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-template-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 26,491
 Columns: 13
@@ -147,116 +409,8 @@ $ Ksp_match   &lt;dbl&gt; 0.07100555, 0.10857034, 0.13101517, 0.06128239, 0.0508
 $ BinaryFile  &lt;chr&gt; "Click_Detector_Click_Detector_Clicks_20150613_161746.pgdf…</code></pre>
 </div>
 </div>
-<p>You can see, this output include for each UID:</p>
-<ul>
-<li>match scores, across all templates (<code>_thresh</code> columns appear to be copies of <code>_match</code> columns)</li>
-<li>a <code>type</code> field which I think is related to the click classifier label given in PG</li>
-</ul>
-<p>What can we glean from this <code>template</code> data to give insight into our results?</p>
-<section id="comparing-distribution-of-match-scores-in-and-outside-of-events" class="level3">
-<h3 class="anchored" data-anchor-id="comparing-distribution-of-match-scores-in-and-outside-of-events">Comparing distribution of match scores in and outside of events</h3>
-<p><strong>Clicks not included in events are, by and large, poor template matches.</strong></p>
-<p>I would like to make some comparisons in the distribution of match scores across clicks that were included in events, versus those that did not get included.</p>
-<p>First thing we need to do to is to determine how we distinguish between clicks that are inside or outside of an event, in the <code>template</code> dataset.</p>
-<p>Since all the events are included in the training set, we can compare UIDs in the training set object called <code>nbhf_clicks</code> to the UIDs in <code>template</code> to determine identifying marks.</p>
-<p>The number of clicks in the training data set is 4685 and the number of clicks in the <code>template</code> dataset having <code>type==101</code> is 4748. There is obviously a small discrepancy here but, overall the numbers match up pretty well. Consider the quantity of clicks broken down by drift.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">template type=101</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">training</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 2
-  db                          n
-  &lt;chr&gt;                   &lt;int&gt;
-1 Bangarang_Dalls            78
-2 CalCURSeas_Dalls           88
-3 CalCURSeas_Harbor         160
-4 OPPS_008_Harbor          2973
-5 OPPS_010_Harbor          1168
-6 PASCAL_Dalls_TowedArray    68
-7 PG2_02_09_CCES_022_Ksp    100
-8 PG2_02_09_CCES_023_Ksp    113</code></pre>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 2
-  db                          n
-  &lt;chr&gt;                   &lt;int&gt;
-1 Bangarang_Dalls            76
-2 CalCURSeas_Dalls           84
-3 CalCURSeas_Harbor         155
-4 OPPS_008_Harbor          2966
-5 OPPS_010_Harbor          1147
-6 PASCAL_Dalls_TowedArray    47
-7 PG2_02_09_CCES_022_Ksp     97
-8 PG2_02_09_CCES_023_Ksp    113</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<p>This leads me to conclude that filtering the <code>template</code> data for clicks with <code>type==101</code> is shorthand for filtering clicks included in events.</p>
-</section>
-<section id="distributions" class="level3">
-<h3 class="anchored" data-anchor-id="distributions">Distributions</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First thing we will do to evaluate distributions is subset `template` so that we can distinguish between clicks inside events and those not inside events</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> template <span class="sc">%&gt;%</span> </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">inev=</span><span class="fu">case_when</span>(type<span class="sc">==</span><span class="dv">101</span> <span class="sc">~</span> <span class="cn">TRUE</span>, <span class="at">.default=</span><span class="cn">FALSE</span>))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Then get the best match score for each click across all the templates</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> t <span class="sc">%&gt;%</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(db, UID, type, <span class="fu">ends_with</span>(<span class="st">"thresh"</span>), inev) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">best=</span><span class="fu">pmax</span>(template<span class="sc">$</span>Pd_1_thresh, template<span class="sc">$</span>Pd_2_thresh, template<span class="sc">$</span>Pp_thresh,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>     template<span class="sc">$</span>Ksp_thresh))</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Then join with species and eventId so we can look at distributions across individual events</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>j1 <span class="ot">&lt;-</span> nbhf_clicks <span class="sc">%&gt;%</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(species, db) <span class="sc">%&gt;%</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">db =</span> <span class="fu">str_remove</span>(<span class="fu">basename</span>(db), <span class="st">" - Copy.sqlite3"</span>))</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> t <span class="sc">%&gt;%</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(j1, <span class="at">by=</span><span class="st">"db"</span>)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> nbhf_clicks <span class="sc">%&gt;%</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(UID, eventId) <span class="sc">%&gt;%</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(t, <span class="at">by=</span><span class="st">"UID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>These distributions show, probably with a significant difference, that clicks not included in events have lower match scores than those included in events. Suggesting that the script did a good job of placing highly matched clicks in events.</p>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 134 rows containing non-finite values (`stat_ydensity()`).</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="eval-events_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
-</div>
-</div>
-<p>There are however some high-scoring clicks that did not get included into events, likely because they were isolated and thus did not meet the criteria for an event. To get a sense of just how many high quality clicks were excluded, lets look at the percentile for the threshold value among the not-included clicks</p>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There was 1 warning in `mutate()`.
-ℹ In argument: `pctile = map_dbl(...)`.
-Caused by warning in `.x$best &lt; threshVal`:
-! longer object length is not a multiple of shorter object length</code></pre>
-</div>
-</div>
-<p>We see from this that</p>
-<ul>
-<li>for harbor porpoise, 13.2723371% of non-event clicks were above the threshold.</li>
-<li>for Dall’s porpoise, 0.5567271% of non-event clicks were above the threshold.</li>
-<li>for <em>Kogia</em>, 7.826087% of non-event clicks were above the threshold.</li>
-</ul>
 </section>
 </section>
 

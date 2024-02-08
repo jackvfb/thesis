@@ -1,86 +1,90 @@
 ---
-title: "What are the results of our methods for defining events?"
+title: "Thesis Results Notebook"
+author: Jackson Vanfleet-Brown
+date: 02/08/2024
 format: html
 editor: visual
+toc: true
+toc-depth: 3
 ---
 
-## Setup
+::: {.callout-note}
+
+## Notebook organization
+
+Results are organized in association with the methodological step which generated them.
+
+The Table of Contents reflects this organizational scheme 
+
+:::
+
 
 ```{r}
 #| output: false
+#| echo: false
+#| label: setup
 
 library(identidrift)
 library(tidyverse)
+library(densityClust)
+library(rfPermute)
 ```
 
-## Intro
 
-In the methods we outlined the process for how we defined events.
+# 1. Making Events
 
-1.  The first part of that was to use a template click with the MTC module to generate match scores for all clicks in each database.
-2.  After that we used a custom script to construct the events. The script output some data that is consolidated into the `template` data object.
-3.  All the events that were defined in step 2 were then used to train the classifier. This final selection of data used to train the model is available in the `nbhf_clicks` data object
+First step of the study was to define events. This is associated with three constituent methodologies.
 
-## Questions
+  1. Selection of template clicks @sec-templates
+  2. Using PG to generate MTC scores @sec-MTC
+  3. Using custom R script to define events @sec-customR
+  
+## Selection of Template Clicks {#sec-templates}
 
--   Did our methods fail to define any events, that should have been included i.e. did it result in any **False Negatives**?
-    -   Approach: evaluate distribution of match scores for all clicks that are **not** included in events that made it into the training set.
-    -   Use `template` data to plot this distribution. See @fig-template.
--   Did our methods identify any **False Positives**?
-    -   This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.
+### Methodology
 
-The end result of that process
+- Chose template clicks representing high-quality clicks
+- All are saved in the `identidrift::template_clicks` data object @sec-data-template
+- There were 4 total, 2 for Dall's porpoise and 1 for each other species.
 
-Some questions that we could answer to give insight into our results
+### Results
+
+This is important for those who are interested in seeing the exact profiles of these types of signals and could be helpful for people studying NBHF clicks in other regions, to compare to what we consider to be a high-quality click signal
+
 
 ```{r}
-glimpse(template)
+
 ```
 
-You can see, this output include for each UID:
+## MTC Module PG {#sec-MTC}
 
--   match scores, across all templates (`_thresh` columns appear to be copies of `_match` columns)
--   a `type` field which I think is related to the click classifier label given in PG
+### Methodology
 
-What can we glean from this `template` data to give insight into our results?
+- Used MTC module to generate match scores for all database clicks.
+- The match scores are saved in the `identidrift::template` data object.
 
-### Comparing distribution of match scores in and outside of events
+### Results
 
-**Clicks not included in events are, by and large, poor template matches.**
+## Custom event definition {#sec-customR}
+
+### Methodology
+
+- Used custom script to construct the events. All the events were saved to a new database of training data.
+-   The training data is saved in the `identidrift::nbhf_clicks` object.
+-   Clicks not included in the training set were not used for any further analysis.
+
+### Results
+
+-   What was the recall and precision?
 
 I would like to make some comparisons in the distribution of match scores across clicks that were included in events, versus those that did not get included.
 
-First thing we need to do to is to determine how we distinguish between clicks that are inside or outside of an event, in the `template` dataset.
+ -   Approach: evaluate distribution of match scores for all clicks that are **not** included in events that made it into the training set.
+    -   Use `template` data to plot this distribution.
 
-Since all the events are included in the training set, we can compare UIDs in the training set object called `nbhf_clicks` to the UIDs in `template` to determine identifying marks.
-
-The number of clicks in the training data set is `{r} nrow(nbhf_clicks)` and the number of clicks in the `template` dataset having `type==101` is `{r} nrow(template%>%filter(type==101))`. There is obviously a small discrepancy here but, overall the numbers match up pretty well. Consider the quantity of clicks broken down by drift.
-
-::: panel-tabset
-## template type=101
-
-```{r}
-#| echo: false
-
-template %>%
-  filter(type==101) %>%
-  count(db)
-```
-
-## training
-
-```{r}
-#| echo: false
-#| 
-nbhf_clicks %>%
-  count(db) %>%
-  mutate(db=str_remove(basename(db), " - Copy.sqlite3"))
-```
-:::
-
-This leads me to conclude that filtering the `template` data for clicks with `type==101` is shorthand for filtering clicks included in events.
-
-### Distributions
+-   False negatives -- This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.
+    
+**Clicks not included in events are, by and large, poor template matches.**
 
 ```{r}
 
@@ -144,3 +148,82 @@ We see from this that
 -   for harbor porpoise, `{r} excl[excl$species=="pp","pctile"]`% of non-event clicks were above the threshold.
 -   for Dall's porpoise, `{r} excl[excl$species=="pd","pctile"]`% of non-event clicks were above the threshold.
 -   for *Kogia*, `{r} excl[excl$species=="ks","pctile"]`% of non-event clicks were above the threshold.
+
+  -  Did our methods fail to define any events, that should have been included i.e. did it result in any **False Negatives**?
+  
+  - Did our methods identify any **False Positives**?
+
+# 2. Clustering
+
+Next step of the study was to cluster to discover associations between events and/or clicks indicative of species classification. Broken down into two steps:
+
+  1. Use PAMpal to extract click features @sec-PAMpal
+  2. Cluster based on event @sec-ev-clusters
+  3. Density cluster based on clicks @sec-density-clusters
+  4. Density cluster, within species, based on clicks @sec-density-clusters-sp
+
+
+## Extracting click features from events and comparing species {#sec-PAMpal}
+
+### Methodology
+
+- From the database with the training events labeled, we then used PAMpal to extract standard set of features from each click.
+- What are the average or generalized spectra and concatenated spectrogram for each different species? In other words, what are the patterns that unify each species and distinguish it from other species?
+- What are the distributions of the standard click features across all the groups?
+- The training data is saved in the `nbhf_clicks` object @sec-data-nbhf_clicks
+
+### Results
+
+## Cluster based on event {#sec-ev-clusters}
+
+### Methodology
+
+- Used nmds with community ecology tactics
+
+### Results
+
+- Does clustering suggest that there are differences between species?
+- Does clustering suggest that, for an individual species, there are differences between events?
+
+## Density Cluster clicks {#sec-density-clusters}
+
+### Methodology
+
+- Used `densityClust` with `rho` and `delta` chosen in advance or manually chosen?
+
+### Results
+
+- Does clustering suggest that there are differences between species?
+
+## Density Cluster clicks, by species {#sec-density-clusters-sp}
+
+### Methodology
+
+- Used `densityClust` with `rho` and `delta` chosen in advance or manually chosen?
+
+### Results
+
+- Does clustering suggest that, for an individual species, there are differences between events?
+
+# Model classifier
+
+**IN PROGRESS**
+
+# Data Appendix
+
+## `nbhf_clicks` {#sec-data-nbhf_clicks}
+
+## `template` {#sec-data-template}
+
+You can see, this data includes for each UID (`{r} nrow(template)` total):
+
+-   match scores, across all 4 templates
+- `_thresh` columns appear to be copies of `_match` columns
+-   a `type` field which I think is related to the click classifier label given in PG
+-   The number of clicks in the training data set is `{r} nrow(nbhf_clicks)` and the number of clicks in the `template` dataset having `type==101` is `{r} nrow(template%>%filter(type==101))`. There is obviously a small discrepancy here but still leads me to conclude that filtering the `template` data for clicks with `type==101` is shorthand for filtering clicks included in events.
+  - This can be verified by examining counts, by event
+
+```{r}
+#| label: tbl-template
+glimpse(template)
+```

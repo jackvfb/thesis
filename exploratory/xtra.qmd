@@ -1,0 +1,47 @@
+---
+title: "xtra"
+format: html
+editor: visual
+---
+
+## Data available
+
+### Match scores
+#### Clicks in events used for training
+
+```{r}
+glimpse(nbhf_clicks)
+```
+
+## Clicks in/not in events
+
+First thing we need to do to is to determine how we distinguish between clicks that are inside or outside of an event, in the `template` dataset.
+
+Since all the events are included in the training set, we can compare UIDs in the training set object called `nbhf_clicks` to the UIDs in `template` to determine identifying marks.
+
+The number of clicks in the training data set is `{r} nrow(nbhf_clicks)` and the number of clicks in the `template` dataset having `type==101` is `{r} nrow(template%>%filter(type==101))`. There is obviously a small discrepancy here but, overall the numbers match up pretty well. Consider the quantity of clicks broken down by drift.
+
+::: panel-tabset
+## template type=101
+
+```{r}
+#| echo: false
+
+template %>%
+  filter(type==101) %>%
+  count(db)
+```
+
+## training
+
+```{r}
+#| echo: false
+#| 
+nbhf_clicks %>%
+  count(db) %>%
+  mutate(db=str_remove(basename(db), " - Copy.sqlite3"))
+```
+:::
+
+### Distributions
+
