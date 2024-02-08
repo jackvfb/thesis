@@ -7,6 +7,7 @@ editor: visual
 ## Data available
 
 ### Match scores
+
 #### Clicks in events used for training
 
 ```{r}
@@ -44,4 +45,3 @@ nbhf_clicks %>%
 :::
 
 ### Distributions
-

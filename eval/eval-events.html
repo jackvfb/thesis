@@ -22,40 +22,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -83,17 +49,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#making-events" id="toc-making-events" class="nav-link active" data-scroll-target="#making-events">1. Making Events</a>
   <ul class="collapse">
-  <li><a href="#sec-templates" id="toc-sec-templates" class="nav-link" data-scroll-target="#sec-templates">Selection of Template Clicks</a>
+  <li><a href="#sec-templates" id="toc-sec-templates" class="nav-link" data-scroll-target="#sec-templates">Template selection</a>
   <ul class="collapse">
   <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#discussion-points" id="toc-discussion-points" class="nav-link" data-scroll-target="#discussion-points">Discussion points</a></li>
   </ul></li>
-  <li><a href="#sec-MTC" id="toc-sec-MTC" class="nav-link" data-scroll-target="#sec-MTC">MTC Module PG</a>
+  <li><a href="#sec-MTC" id="toc-sec-MTC" class="nav-link" data-scroll-target="#sec-MTC">Template matching</a>
   <ul class="collapse">
   <li><a href="#methodology-1" id="toc-methodology-1" class="nav-link" data-scroll-target="#methodology-1">Methodology</a></li>
   <li><a href="#results-1" id="toc-results-1" class="nav-link" data-scroll-target="#results-1">Results</a></li>
+  <li><a href="#discussion-points-1" id="toc-discussion-points-1" class="nav-link" data-scroll-target="#discussion-points-1">Discussion points</a></li>
   </ul></li>
-  <li><a href="#sec-customR" id="toc-sec-customR" class="nav-link" data-scroll-target="#sec-customR">Custom event definition</a>
+  <li><a href="#sec-customR" id="toc-sec-customR" class="nav-link" data-scroll-target="#sec-customR">Define events</a>
   <ul class="collapse">
   <li><a href="#methodology-2" id="toc-methodology-2" class="nav-link" data-scroll-target="#methodology-2">Methodology</a></li>
   <li><a href="#results-2" id="toc-results-2" class="nav-link" data-scroll-target="#results-2">Results</a></li>
@@ -187,107 +155,235 @@ Notebook organization
 <li>Using custom R script to define events <a href="#sec-customR" class="quarto-xref">Section&nbsp;1.3</a></li>
 </ol>
 <section id="sec-templates" class="level2">
-<h2 class="anchored" data-anchor-id="sec-templates">Selection of Template Clicks</h2>
+<h2 class="anchored" data-anchor-id="sec-templates">Template selection</h2>
 <section id="methodology" class="level3">
 <h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
 <ul>
 <li>Chose template clicks representing high-quality clicks</li>
-<li>All are saved in the <code>identidrift::template_clicks</code> data object <a href="#sec-data-template" class="quarto-xref">Section&nbsp;4.2</a></li>
-<li>There were 4 total, 2 for Dall’s porpoise and 1 for each other species.</li>
+<li>All are saved in the <code>identidrift::click_templates</code> data object <a href="#sec-data-template" class="quarto-xref">Section&nbsp;4.2</a></li>
+<li>Chose 4 total, 2 for Dall’s porpoise and 1 for each other species. Two were needed for Dall’s porpoise due to apparent increased variability in events.</li>
 </ul>
 </section>
 <section id="results" class="level3">
 <h3 class="anchored" data-anchor-id="results">Results</h3>
-<p>This is important for those who are interested in seeing the exact profiles of these types of signals and could be helpful for people studying NBHF clicks in other regions, to compare to what we consider to be a high-quality click signal</p>
-</section>
-</section>
-<section id="sec-MTC" class="level2">
-<h2 class="anchored" data-anchor-id="sec-MTC">MTC Module PG</h2>
-<section id="methodology-1" class="level3">
-<h3 class="anchored" data-anchor-id="methodology-1">Methodology</h3>
-<ul>
-<li>Used MTC module to generate match scores for all database clicks.</li>
-<li>The match scores are saved in the <code>identidrift::template</code> data object.</li>
-</ul>
-</section>
-<section id="results-1" class="level3">
-<h3 class="anchored" data-anchor-id="results-1">Results</h3>
-</section>
-</section>
-<section id="sec-customR" class="level2">
-<h2 class="anchored" data-anchor-id="sec-customR">Custom event definition</h2>
-<section id="methodology-2" class="level3">
-<h3 class="anchored" data-anchor-id="methodology-2">Methodology</h3>
-<ul>
-<li>Used custom script to construct the events. All the events were saved to a new database of training data.</li>
-<li>The training data is saved in the <code>identidrift::nbhf_clicks</code> object.</li>
-<li>Clicks not included in the training set were not used for any further analysis.</li>
-</ul>
-</section>
-<section id="results-2" class="level3">
-<h3 class="anchored" data-anchor-id="results-2">Results</h3>
-<ul>
-<li>What was the recall and precision?</li>
-</ul>
-<p>I would like to make some comparisons in the distribution of match scores across clicks that were included in events, versus those that did not get included.</p>
-<ul>
-<li><p>Approach: evaluate distribution of match scores for all clicks that are <strong>not</strong> included in events that made it into the training set. - Use <code>template</code> data to plot this distribution.</p></li>
-<li><p>False negatives – This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.</p></li>
-</ul>
-<p><strong>Clicks not included in events are, by and large, poor template matches.</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First thing we will do to evaluate distributions is subset `template` so that we can distinguish between clicks inside events and those not inside events</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> template <span class="sc">%&gt;%</span> </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">inev=</span><span class="fu">case_when</span>(type<span class="sc">==</span><span class="dv">101</span> <span class="sc">~</span> <span class="cn">TRUE</span>, <span class="at">.default=</span><span class="cn">FALSE</span>))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Then get the best match score for each click across all the templates</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> t <span class="sc">%&gt;%</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(db, UID, type, <span class="fu">ends_with</span>(<span class="st">"thresh"</span>), inev) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">best=</span><span class="fu">pmax</span>(template<span class="sc">$</span>Pd_1_thresh, template<span class="sc">$</span>Pd_2_thresh, template<span class="sc">$</span>Pp_thresh,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>     template<span class="sc">$</span>Ksp_thresh))</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Then join with species and eventId so we can look at distributions across individual events</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>j1 <span class="ot">&lt;-</span> nbhf_clicks <span class="sc">%&gt;%</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(species, db) <span class="sc">%&gt;%</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">db =</span> <span class="fu">str_remove</span>(<span class="fu">basename</span>(db), <span class="st">" - Copy.sqlite3"</span>))</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> t <span class="sc">%&gt;%</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(j1, <span class="at">by=</span><span class="st">"db"</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> nbhf_clicks <span class="sc">%&gt;%</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(UID, eventId) <span class="sc">%&gt;%</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(t, <span class="at">by=</span><span class="st">"UID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I can add some general remarks here about broad differences in the shapes of the different profiles and what features led us to select them as high-quality clicks.</p>
+<div id="fig-click-template-timewaves" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-click-template-timewaves-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-timewaves" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-timewaves-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-timewaves-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-timewaves-1.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-timewaves" width="672">
 </div>
-<p>These distributions show, probably with a significant difference, that clicks not included in events have lower match scores than those included in events. Suggesting that the script did a good job of placing highly matched clicks in events.</p>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 134 rows containing non-finite values (`stat_ydensity()`).</code></pre>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-timewaves-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Kogia
+</figcaption>
+</figure>
 </div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="eval-events_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-timewaves" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-timewaves-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-timewaves-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-timewaves-2.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-timewaves" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-timewaves-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Dall’s porpoise 1
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>There are however some high-scoring clicks that did not get included into events, likely because they were isolated and thus did not meet the criteria for an event. To get a sense of just how many high quality clicks were excluded, lets look at the percentile for the threshold value among the not-included clicks</p>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-timewaves" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-timewaves-3" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-timewaves-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-timewaves-3.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-timewaves" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-timewaves-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Dall’s porpoise 2
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-timewaves" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-timewaves-4" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-timewaves-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-timewaves-4.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-timewaves" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-timewaves-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Harbor porpoise
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-click-template-timewaves-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Template click time waves
+</figcaption>
+</figure>
+</div>
+<div id="fig-click-template-spectra" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-click-template-spectra-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-spectra" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-spectra-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-spectra-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-spectra-1.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-spectra" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-spectra-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Kogia
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-spectra" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-spectra-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-spectra-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-spectra-2.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-spectra" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-spectra-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Dall’s porpoise 1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-spectra" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-spectra-3" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-spectra-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-spectra-3.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-spectra" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-spectra-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Dall’s porpoise 2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-click-template-spectra-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Template click spectra
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="discussion-points" class="level3">
+<h3 class="anchored" data-anchor-id="discussion-points">Discussion points</h3>
+<p>This is important for those who are interested in seeing the exact profiles of these types of signals and could be helpful for people studying NBHF clicks in other regions, to compare to what we consider to be a high-quality click.</p>
+</section>
+</section>
+<section id="sec-MTC" class="level2">
+<h2 class="anchored" data-anchor-id="sec-MTC">Template matching</h2>
+<section id="methodology-1" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-1">Methodology</h3>
+<ul>
+<li>Used <em>PAMguard</em> MTC module to generate match scores for all database clicks.</li>
+<li>The <strong>best</strong> match score along with the associated template ID is saved for each click in the <code>identidrift::template</code> data object.</li>
+</ul>
+</section>
+<section id="results-1" class="level3">
+<h3 class="anchored" data-anchor-id="results-1">Results</h3>
+<p>From <a href="#fig-best-match-score-dist" class="quarto-xref">Figure&nbsp;3</a> we can look comparitively at how each species’ clicks matched against the four available templates.</p>
+<p>The distributions show that:</p>
+<ul>
+<li><em>Kogia</em> seems to match best with it’s template, since the distribution mean is well above the other two. This indicates also that the other species don’t match well with it.</li>
+<li>For the harbor porpoise template, the flattened distribution of harbor porpoise appears to have a higher mean than the other species. Another indication that this template is working well, like the <em>Kogia</em> template</li>
+<li>Mixed results for Dall’s porpoise. Not seeing the same trends that would indicate that it is being matched well with it’s templates.</li>
+</ul>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There was 1 warning in `mutate()`.
-ℹ In argument: `pctile = map_dbl(...)`.
-Caused by warning in `.x$best &lt; threshVal`:
-! longer object length is not a multiple of shorter object length</code></pre>
+<div class="cell-output-display">
+<div id="fig-best-match-score-dist" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-best-match-score-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-best-match-score-dist-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-best-match-score-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Species distributions of best match scores, faceted by template
+</figcaption>
+</figure>
 </div>
 </div>
+</div>
+</section>
+<section id="discussion-points-1" class="level3">
+<h3 class="anchored" data-anchor-id="discussion-points-1">Discussion points</h3>
+<ul>
+<li>Harbor porpoise and <em>Kogia</em> templates is doing a good job of matching with their respective species while excluding others.</li>
+<li>Will the poorer matching of Dall’s porpoise be reflected in the classifier’s results as well? This could say something about this species, such as that it exhibits greater variability and has a signature that is harder to constrain.</li>
+</ul>
+</section>
+</section>
+<section id="sec-customR" class="level2">
+<h2 class="anchored" data-anchor-id="sec-customR">Define events</h2>
+<section id="methodology-2" class="level3">
+<h3 class="anchored" data-anchor-id="methodology-2">Methodology</h3>
+<ul>
+<li>Used custom script to label the events in each database. Required a match score threshold to be given for each template. (<a href="#tbl-thresholds" class="quarto-xref">Table&nbsp;1</a>).</li>
+<li>Also required setting maximum seperation between clicks in the same event, given as <strong>120 sec</strong>, and minimum number of clicks per event, given as <strong>3</strong>.</li>
+<li>Script then labeled events in the database, which were then used to extract click calcs using <code>PAMpal</code>
+<ul>
+<li>These would be used as the training data set.</li>
+<li>Clicks not included in events were not used for any further analysis.</li>
+</ul></li>
+<li>The training data is saved in the <code>identidrift::nbhf_clicks</code> object.</li>
+</ul>
+<div id="tbl-thresholds" class="anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-thresholds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Thresholds used to determine true positives when constructing events.
+</figcaption>
+<div aria-describedby="tbl-thresholds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th>Ksp</th>
+<th>Pd_1</th>
+<th>Pd_2</th>
+<th>Pp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.45</td>
+<td>0.45</td>
+<td>0.45</td>
+<td>0.60</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="results-2" class="level3">
+<h3 class="anchored" data-anchor-id="results-2">Results</h3>
+<p>Thresholds chosen reduced size of databases by how much percent? i.e.&nbsp;how selective were we being?</p>
+<p>The time/size limits will have the effect of excluding some clicks from our analysis that would have otherwise been considered due to a high match score. So what are the match score distributions of clicks that ended up being excluded from events/what percentage of all our training data does this represent?</p>
+<p>How many events ended up being created and what is the average size of an event? Or average duration? Does this say something about the species encounters? – that might be more relevant for the Survey predictions.</p>
+<p>I would like to make some comparisons in the distribution of match scores across clicks that were included in events, versus those that did not get included.</p>
+<p>Approach: evaluate distribution of match scores for all clicks that are <strong>not</strong> included in events that made it into the training set. - Use <code>template</code> data to plot this distribution.</p>
+<ul>
+<li>False negatives – This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.</li>
+</ul>
+<p><strong>Clicks not included in events are, by and large, poor template matches.</strong></p>
+<p>These distributions show, probably with a significant difference, that clicks not included in events have lower match scores than those included in events. Suggesting that the script did a good job of placing highly matched clicks in events.</p>
+<p>There are however some high-scoring clicks that did not get included into events, likely because they were isolated and thus did not meet the criteria for an event. To get a sense of just how many high quality clicks were excluded, lets look at the percentile for the threshold value among the not-included clicks</p>
 <p>We see from this that</p>
 <ul>
-<li><p>for harbor porpoise, 13.2723371% of non-event clicks were above the threshold.</p></li>
-<li><p>for Dall’s porpoise, 0.5567271% of non-event clicks were above the threshold.</p></li>
-<li><p>for <em>Kogia</em>, 7.826087% of non-event clicks were above the threshold.</p></li>
+<li><p>for harbor porpoise, {r} excl[excl$species==“pp”,“pctile”]% of non-event clicks were above the threshold.</p></li>
+<li><p>for Dall’s porpoise, {r} excl[excl$species==“pd”,“pctile”]% of non-event clicks were above the threshold.</p></li>
+<li><p>for <em>Kogia</em>, {r} excl[excl$species==“ks”,“pctile”]% of non-event clicks were above the threshold.</p></li>
 <li><p>Did our methods fail to define any events, that should have been included i.e.&nbsp;did it result in any <strong>False Negatives</strong>?</p></li>
 <li><p>Did our methods identify any <strong>False Positives</strong>?</p></li>
 </ul>
@@ -376,37 +472,32 @@ Caused by warning in `.x$best &lt; threshVal`:
 </section>
 <section id="sec-data-template" class="level2">
 <h2 class="anchored" data-anchor-id="sec-data-template"><code>template</code></h2>
-<p>You can see, this data includes for each UID (26491 total):</p>
+<p>You can see, this data includes for each UID (26357 total):</p>
 <ul>
 <li>match scores, across all 4 templates</li>
 <li><code>_thresh</code> columns appear to be copies of <code>_match</code> columns</li>
 <li>a <code>type</code> field which I think is related to the click classifier label given in PG</li>
-<li>The number of clicks in the training data set is 4685 and the number of clicks in the <code>template</code> dataset having <code>type==101</code> is 4748. There is obviously a small discrepancy here but still leads me to conclude that filtering the <code>template</code> data for clicks with <code>type==101</code> is shorthand for filtering clicks included in events.</li>
+<li>The number of clicks in the training data set is 4685 and the number of clicks in the <code>template</code> dataset having <code>type==101</code> is 4719. There is obviously a small discrepancy here but still leads me to conclude that filtering the <code>template</code> data for clicks with <code>type==101</code> is shorthand for filtering clicks included in events.</li>
 <li>This can be verified by examining counts, by event</li>
 </ul>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(template)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="tbl-template" class="cell anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-template-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1
+Table&nbsp;2
 </figcaption>
 <div aria-describedby="tbl-template-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 26,491
-Columns: 13
-$ db          &lt;chr&gt; "Bangarang_Dalls", "Bangarang_Dalls", "Bangarang_Dalls", "…
-$ UID         &lt;chr&gt; "247000001", "247000002", "247000003", "247000004", "24700…
-$ type        &lt;int&gt; 3, 3, 7, 2, 6, 7, 3, 3, 7, 7, 3, 7, 3, 7, 7, 7, 3, 2, 6, 7…
-$ UTC         &lt;dttm&gt; 2015-06-13 16:17:46, 2015-06-13 16:17:46, 2015-06-13 16:1…
-$ Pd_1_thresh &lt;dbl&gt; 0.07701931, 0.05437314, 0.09006974, 0.04662150, 0.05759609…
-$ Pd_2_thresh &lt;dbl&gt; 0.05137087, 0.08553706, 0.08983315, 0.04329270, 0.08922974…
-$ Pp_thresh   &lt;dbl&gt; 0.06901474, 0.08131630, 0.12873916, 0.04574575, 0.09179504…
-$ Ksp_thresh  &lt;dbl&gt; 0.07100555, 0.10857034, 0.13101517, 0.06128239, 0.05089132…
-$ Pd_1_match  &lt;dbl&gt; 0.07701931, 0.05437314, 0.09006974, 0.04662150, 0.05759609…
-$ Pd_2_match  &lt;dbl&gt; 0.05137087, 0.08553706, 0.08983315, 0.04329270, 0.08922974…
-$ Pp_match    &lt;dbl&gt; 0.06901474, 0.08131630, 0.12873916, 0.04574575, 0.09179504…
-$ Ksp_match   &lt;dbl&gt; 0.07100555, 0.10857034, 0.13101517, 0.06128239, 0.05089132…
-$ BinaryFile  &lt;chr&gt; "Click_Detector_Click_Detector_Clicks_20150613_161746.pgdf…</code></pre>
+<pre><code>Rows: 26,357
+Columns: 8
+Groups: UID [26,357]
+$ db         &lt;chr&gt; "CalCURSeas_Dalls", "CalCURSeas_Dalls", "CalCURSeas_Dalls",…
+$ UID        &lt;chr&gt; "1170000001", "1174000001", "1174000002", "1174000003", "11…
+$ type       &lt;int&gt; 2, 101, 0, 101, 101, 101, 101, 101, 101, 101, 101, 101, 101…
+$ UTC        &lt;dttm&gt; 2014-08-11 15:56:19, 2014-08-11 15:59:55, 2014-08-11 16:00…
+$ BinaryFile &lt;chr&gt; "Click_Detector_Click_Detector_Clicks_20140811_155523.pgdf"…
+$ species    &lt;chr&gt; "pd", "pd", "pd", "pd", "pd", "pd", "pd", "pd", "pd", "pd",…
+$ best       &lt;chr&gt; "Ksp_match", "Pd_1_match", "Pp_match", "Pp_match", "Pd_1_ma…
+$ value      &lt;dbl&gt; 0.3020326, 0.4857104, 0.5098917, 0.6500152, 0.6074533, 0.85…</code></pre>
 </div>
 </div>
 </figure>
