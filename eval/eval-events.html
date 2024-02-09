@@ -65,11 +65,12 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#methodology-2" id="toc-methodology-2" class="nav-link" data-scroll-target="#methodology-2">Methodology</a></li>
   <li><a href="#results-2" id="toc-results-2" class="nav-link" data-scroll-target="#results-2">Results</a></li>
+  <li><a href="#discussion-points-2" id="toc-discussion-points-2" class="nav-link" data-scroll-target="#discussion-points-2">Discussion points</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#clustering" id="toc-clustering" class="nav-link" data-scroll-target="#clustering">2. Clustering</a>
   <ul class="collapse">
-  <li><a href="#sec-PAMpal" id="toc-sec-PAMpal" class="nav-link" data-scroll-target="#sec-PAMpal">Extracting click features from events and comparing species</a>
+  <li><a href="#sec-PAMpal" id="toc-sec-PAMpal" class="nav-link" data-scroll-target="#sec-PAMpal">Extracting features</a>
   <ul class="collapse">
   <li><a href="#methodology-3" id="toc-methodology-3" class="nav-link" data-scroll-target="#methodology-3">Methodology</a></li>
   <li><a href="#results-3" id="toc-results-3" class="nav-link" data-scroll-target="#results-3">Results</a></li>
@@ -224,7 +225,7 @@ Notebook organization
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-click-template-timewaves-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Template click time waves
+Figure&nbsp;1: Template click time waves.
 </figcaption>
 </figure>
 </div>
@@ -270,6 +271,18 @@ Figure&nbsp;1: Template click time waves
 </figure>
 </div>
 </div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-click-template-spectra" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-click-template-spectra-4" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-click-template-spectra-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-click-template-spectra-4.png" class="img-fluid figure-img" data-ref-parent="fig-click-template-spectra" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-click-template-spectra-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Harbor porpoise
+</figcaption>
+</figure>
+</div>
+</div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-click-template-spectra-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -294,7 +307,7 @@ Figure&nbsp;2: Template click spectra
 </section>
 <section id="results-1" class="level3">
 <h3 class="anchored" data-anchor-id="results-1">Results</h3>
-<p>From <a href="#fig-best-match-score-dist" class="quarto-xref">Figure&nbsp;3</a> we can look comparitively at how each species’ clicks matched against the four available templates.</p>
+<p>From <a href="#fig-best-match-score-dist" class="quarto-xref">Figure&nbsp;3</a> we can look comparatively at how each species’ clicks matched against the four available templates.</p>
 <p>The distributions show that:</p>
 <ul>
 <li><em>Kogia</em> seems to match best with it’s template, since the distribution mean is well above the other two. This indicates also that the other species don’t match well with it.</li>
@@ -329,63 +342,79 @@ Figure&nbsp;3: Species distributions of best match scores, faceted by template
 <section id="methodology-2" class="level3">
 <h3 class="anchored" data-anchor-id="methodology-2">Methodology</h3>
 <ul>
-<li>Used custom script to label the events in each database. Required a match score threshold to be given for each template. (<a href="#tbl-thresholds" class="quarto-xref">Table&nbsp;1</a>).</li>
-<li>Also required setting maximum seperation between clicks in the same event, given as <strong>120 sec</strong>, and minimum number of clicks per event, given as <strong>3</strong>.</li>
-<li>Script then labeled events in the database, which were then used to extract click calcs using <code>PAMpal</code>
+<li>Used custom script to label the events in each database. Required a match score threshold to be given for each template (0.45-0.6)</li>
+<li>Also required setting maximum separation between clicks in the same event, given as <strong>120 sec</strong>, and minimum number of clicks per event, given as <strong>3</strong>.</li>
+<li>Script then labeled events in the database
 <ul>
-<li>These would be used as the training data set.</li>
+<li>Only clicks that were seen as part of an event were included in the training data set.</li>
 <li>Clicks not included in events were not used for any further analysis.</li>
 </ul></li>
-<li>The training data is saved in the <code>identidrift::nbhf_clicks</code> object.</li>
 </ul>
-<div id="tbl-thresholds" class="anchored">
+</section>
+<section id="results-2" class="level3">
+<h3 class="anchored" data-anchor-id="results-2">Results</h3>
+<p>Recall and precision would be common metrics for assessing the performance of our event definition procedure. Recall (<a href="#tbl-recall" class="quarto-xref">Table&nbsp;1</a>) would be estimated by counting clicks that possessed high match scores but which did not make it into the training set (false negatives). This would occur when high-quality clicks were isolated and did not occur temporally with enough other clicks to warrant declaring an event. This means they will have been ommitted from the training set. This does appear to be a rather small component since as we see in <a href="#tbl-recall" class="quarto-xref">Table&nbsp;1</a> recall is around ~90% across all species.</p>
+<div id="tbl-recall" class="anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-thresholds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Thresholds used to determine true positives when constructing events.
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-recall-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Recall of event definition procedure
 </figcaption>
-<div aria-describedby="tbl-thresholds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-recall-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
 <thead>
 <tr class="header">
 <th>Ksp</th>
-<th>Pd_1</th>
-<th>Pd_2</th>
+<th>Pd</th>
 <th>Pp</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>0.45</td>
-<td>0.45</td>
-<td>0.45</td>
-<td>0.60</td>
+<td>88.9830508%</td>
+<td>91.1894273%</td>
+<td>89.475891%</td>
 </tr>
 </tbody>
 </table>
 </div>
 </figure>
 </div>
+<p>Precision would be more difficult to estimate. There is a region of overlap in the score distributions of the data that was and was not included (see <a href="#fig-match-score-overlap" class="quarto-xref">Figure&nbsp;4</a>). This suggests sort of a “grey” area where the match is sometimes poor, but with enough other matches could nonetheless warrant an event?</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-match-score-overlap" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-match-score-overlap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-match-score-overlap-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-match-score-overlap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Distributions of scores of clicks both included and excluded from the training set.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>To investigate further I plot to see if there is a relationship between the mean match score of an event and the size of an event. <a href="#fig-score-vs-size" class="quarto-xref">Figure&nbsp;5</a> shows that larger events tend to have higher mean match scores. Looks like a pretty strong positive relationship.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-score-vs-size" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-score-vs-size-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-score-vs-size-1.png" id="fig-score-vs-size" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-score-vs-size-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="results-2" class="level3">
-<h3 class="anchored" data-anchor-id="results-2">Results</h3>
-<p>Thresholds chosen reduced size of databases by how much percent? i.e.&nbsp;how selective were we being?</p>
-<p>The time/size limits will have the effect of excluding some clicks from our analysis that would have otherwise been considered due to a high match score. So what are the match score distributions of clicks that ended up being excluded from events/what percentage of all our training data does this represent?</p>
-<p>How many events ended up being created and what is the average size of an event? Or average duration? Does this say something about the species encounters? – that might be more relevant for the Survey predictions.</p>
-<p>I would like to make some comparisons in the distribution of match scores across clicks that were included in events, versus those that did not get included.</p>
-<p>Approach: evaluate distribution of match scores for all clicks that are <strong>not</strong> included in events that made it into the training set. - Use <code>template</code> data to plot this distribution.</p>
+<section id="discussion-points-2" class="level3">
+<h3 class="anchored" data-anchor-id="discussion-points-2">Discussion points</h3>
 <ul>
-<li>False negatives – This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.</li>
-</ul>
-<p><strong>Clicks not included in events are, by and large, poor template matches.</strong></p>
-<p>These distributions show, probably with a significant difference, that clicks not included in events have lower match scores than those included in events. Suggesting that the script did a good job of placing highly matched clicks in events.</p>
-<p>There are however some high-scoring clicks that did not get included into events, likely because they were isolated and thus did not meet the criteria for an event. To get a sense of just how many high quality clicks were excluded, lets look at the percentile for the threshold value among the not-included clicks</p>
-<p>We see from this that</p>
-<ul>
-<li><p>for harbor porpoise, {r} excl[excl$species==“pp”,“pctile”]% of non-event clicks were above the threshold.</p></li>
-<li><p>for Dall’s porpoise, {r} excl[excl$species==“pd”,“pctile”]% of non-event clicks were above the threshold.</p></li>
-<li><p>for <em>Kogia</em>, {r} excl[excl$species==“ks”,“pctile”]% of non-event clicks were above the threshold.</p></li>
-<li><p>Did our methods fail to define any events, that should have been included i.e.&nbsp;did it result in any <strong>False Negatives</strong>?</p></li>
-<li><p>Did our methods identify any <strong>False Positives</strong>?</p></li>
+<li>Recall is high, which we expected because we deliberately lowered the threshold out of concern for missing valuable data in our training set.</li>
+<li>Precision is harder to estimate. We might expect precision to have been diminished since we tailored our model to maximize recall.</li>
 </ul>
 </section>
 </section>
@@ -400,7 +429,7 @@ Table&nbsp;1: Thresholds used to determine true positives when constructing even
 <li>Density cluster, within species, based on clicks <a href="#sec-density-clusters-sp" class="quarto-xref">Section&nbsp;2.4</a></li>
 </ol>
 <section id="sec-PAMpal" class="level2">
-<h2 class="anchored" data-anchor-id="sec-PAMpal">Extracting click features from events and comparing species</h2>
+<h2 class="anchored" data-anchor-id="sec-PAMpal">Extracting features</h2>
 <section id="methodology-3" class="level3">
 <h3 class="anchored" data-anchor-id="methodology-3">Methodology</h3>
 <ul>
@@ -412,6 +441,111 @@ Table&nbsp;1: Thresholds used to determine true positives when constructing even
 </section>
 <section id="results-3" class="level3">
 <h3 class="anchored" data-anchor-id="results-3">Results</h3>
+<div id="fig-ks-concat" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ks-concat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ks-concat" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-ks-concat-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ks-concat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-ks-concat-1.png" class="img-fluid figure-img" data-ref-parent="fig-ks-concat" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ks-concat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Concatenated spectrogram
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-ks-concat" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-ks-concat-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-ks-concat-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-ks-concat-2.png" class="img-fluid figure-img" data-ref-parent="fig-ks-concat" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-ks-concat-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Averaged spectrum
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ks-concat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Spectral features of Kogia species class
+</figcaption>
+</figure>
+</div>
+<div id="fig-pd-concat" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pd-concat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-pd-concat" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pd-concat-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-pd-concat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-pd-concat-1.png" class="img-fluid figure-img" data-ref-parent="fig-pd-concat" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-pd-concat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Concatenated spectrogram
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-pd-concat" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pd-concat-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-pd-concat-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-pd-concat-2.png" class="img-fluid figure-img" data-ref-parent="fig-pd-concat" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-pd-concat-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Averaged spectrum
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pd-concat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Spectral features of Dall’s porpoise class
+</figcaption>
+</figure>
+</div>
+<div id="fig-pp-concat" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pp-concat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-pp-concat" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pp-concat-1" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-pp-concat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-pp-concat-1.png" class="img-fluid figure-img" data-ref-parent="fig-pp-concat" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-pp-concat-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Concatenated spectrogram
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-pp-concat" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pp-concat-2" class="quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-pp-concat-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="eval-events_files/figure-html/fig-pp-concat-2.png" class="img-fluid figure-img" data-ref-parent="fig-pp-concat" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-pp-concat-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Averaged spectrum
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pp-concat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Spectral features of harbor porpoise class
+</figcaption>
+</figure>
+</div>
 </section>
 </section>
 <section id="sec-ev-clusters" class="level2">

@@ -1,7 +1,7 @@
 ---
 title: "xtra"
 format: html
-editor: visual
+editor: source
 ---
 
 ## Data available
@@ -44,4 +44,46 @@ nbhf_clicks %>%
 ```
 :::
 
-### Distributions
+### Matches
+
+In @fig-best-match-score-bars we can look at just clicks exceeding the chosen threshold. We see what proportion of each species' true positive clicks (those having a score exceeding threshold) matched with each of the four templates. We see that the overwhelming majority of harbor porpoise clicks matched with the intended template. While both *Kogia* and Dall's porpoise appear to have about half of their clicks matched with the intended template, they also have a substantial proportion of clicks matching well with other templates.
+
+```{r}
+#| label: fig-best-match-score-bars
+#| echo: false
+#| fig-cap: Proportion of clicks with match scores over threshold belonging to each species, colored by template
+
+template %>%
+  filter(value>0.5) %>% 
+  ggplot(aes(x=species, fill=best))+
+  geom_bar(position="fill")
+```
+
+
+```{r}
+#| echo:false
+
+x <- template %>%
+  group_by(species) %>% 
+  count
+
+y <- nbhf_clicks %>%
+  count(species)
+
+z <- inner_join(x, y, by="species") %>%
+  mutate(pct_reduced=100-(n.y/n.x)*100)
+```
+
+The thresholding process and event definition process, with the values chosen, reduced the size of the databases appreciably with the harbor porpoise data being reduced by `{r} z[3, 4]`%, *Kogia* database reduced by `{r} z[1, 4]`%, and Dall's porpoise reduced by `{r} z[2, 4]`%.
+
+```{r}
+#| eval: false
+
+nbhf_clicks %>%
+  count(species, eventId) %>%
+  arrange(n) %>% 
+  ggplot(aes(x=eventId, y=n, color=species))+
+  geom_bar(stat="identity")
+```
+
+Thresholds chosen reduced size of databases by how much percent? i.e. how selective were we being?

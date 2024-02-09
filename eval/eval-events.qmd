@@ -22,6 +22,7 @@ The Table of Contents reflects this organizational scheme
 
 library(identidrift)
 library(tidyverse)
+library(PAMpal)
 library(densityClust)
 library(rfPermute)
 library(seewave)
@@ -49,14 +50,13 @@ I can add some general remarks here about broad differences in the shapes of the
 
 ```{r}
 #| label: fig-click-template-timewaves
-#| fig-cap: "Template click time waves"
+#| fig-cap: "Template click time waves."
 #| fig-subcap: 
 #|   - "Kogia"
 #|   - "Dall's porpoise 1"
 #|   - "Dall's porpoise 2"
 #|   - "Harbor porpoise"
 #| layout-ncol: 2
-#| echo: false
 
 plot(click_templates[["Ksp"]]$wave[,2], type = 'l', xlab = "Time", ylab = "Amplitude")
 plot(click_templates[["Pd_1"]]$wave[,1], type = 'l', xlab = "Time", ylab = "Amplitude")
@@ -74,12 +74,13 @@ plot(click_templates[["Pp"]]$wave[,2], type = 'l', xlab = "Time", ylab = "Amplit
 #|   - "Dall's porpoise 2"
 #|   - "Harbor porpoise"
 #| layout-ncol: 2
-#| echo: false
 
+# Could also use PAMpal::plotSpectrogram() !!!
 spec(click_templates[["Ksp"]]$wave, 384000)
 spec(click_templates[["Pd_1"]]$wave, 384000)
-spec(click_templates[["Pd_1"]]$wave, 384000)
+spec(click_templates[["Pd_2"]]$wave, 384000)
 spec(click_templates[["Pp"]]$wave, 384000)
+
 ```
 ### Discussion points
 
@@ -94,7 +95,7 @@ This is important for those who are interested in seeing the exact profiles of t
 
 ### Results
 
-From @fig-best-match-score-dist we can look comparitively at how each species' clicks matched against the four available templates.
+From @fig-best-match-score-dist we can look comparatively at how each species' clicks matched against the four available templates.
 
 The distributions show that:
 
@@ -104,7 +105,6 @@ The distributions show that:
 
 ```{r}
 #| label: fig-best-match-score-dist
-#| echo: false
 #| fig-cap: Species distributions of best match scores, faceted by template
 
 template %>%
@@ -112,6 +112,7 @@ template %>%
   geom_density()+
   facet_wrap(~best)
 ```
+
 ### Discussion points
 
 - Harbor porpoise and *Kogia* templates is doing a good job of matching with their respective species while excluding others.
@@ -121,106 +122,67 @@ template %>%
 
 ### Methodology
 
--   Used custom script to label the events in each database. Required a match score threshold to be given for each template. (@tbl-thresholds).
-- Also required setting maximum seperation between clicks in the same event, given as **120 sec**, and minimum number of clicks per event, given as **3**.
-- Script then labeled events in the database, which were then used to extract click calcs using `PAMpal`
-    - These would be used as the training data set.
+-   Used custom script to label the events in each database. Required a match score threshold to be given for each template (0.45-0.6)
+- Also required setting maximum separation between clicks in the same event, given as **120 sec**, and minimum number of clicks per event, given as **3**.
+- Script then labeled events in the database
+    - Only clicks that were seen as part of an event were included in the training data set.
     - Clicks not included in events were not used for any further analysis.
--   The training data is saved in the `identidrift::nbhf_clicks` object.
-
-| Ksp  | Pd_1 | Pd_2 | Pp   |
-|------|------|------|------|
-| 0.45 | 0.45 | 0.45 | 0.60 |
-
-: Thresholds used to determine true positives when constructing events. {#tbl-thresholds}
 
 ### Results
 
-Thresholds chosen reduced size of databases by how much percent? i.e. how selective were we being?
-
-The time/size limits will have the effect of excluding some clicks from our analysis that would have otherwise been considered due to a high match score. So what are the match score distributions of clicks that ended up being excluded from events/what percentage of all our training data does this represent?
-
-How many events ended up being created and what is the average size of an event? Or average duration? Does this say something about the species encounters? -- that might be more relevant for the Survey predictions.
-
-I would like to make some comparisons in the distribution of match scores across clicks that were included in events, versus those that did not get included.
-
-Approach: evaluate distribution of match scores for all clicks that are **not** included in events that made it into the training set. - Use `template` data to plot this distribution.
-
--   False negatives -- This is unlikely as the thresholds decided upon were chosen to set an intentionally low bar, and we performed a manual review to determine that no manually labelled events were being excluded from the automatically defined events when choosing these thresholds.
-
-**Clicks not included in events are, by and large, poor template matches.**
+Recall and precision would be common metrics for assessing the performance of our event definition procedure. 
+Recall (@tbl-recall) would be estimated by counting clicks that possessed high match scores but which did not make it into the training set (false negatives). This would occur when high-quality clicks were isolated and did not occur temporally with enough other clicks to warrant declaring an event. This means they will have been ommitted from the training set. This does appear to be a rather small component since as we see in @tbl-recall recall is around ~90% across all species.
 
 ```{r}
-#| eval: false
 
-# First thing we will do to evaluate distributions is subset `template` so that we can distinguish between clicks inside events and those not inside events
+dropped <- setdiff(template$UID, nbhf_clicks$UID)
+recall <- template[which(template$UID %in% dropped),] %>% 
+  filter(value > 0.55) %>% # crude filter, need to improve, use nest/mutate/map
+  group_by(species) %>%
+  count() %>% 
+  inner_join(count(nbhf_clicks, species), by="species") %>%
+  mutate(recall=n.y/(n.y+n.x)*100)
 
-t <- template %>% 
-  mutate(inev=case_when(type==101 ~ TRUE, .default=FALSE))
-
-# Then get the best match score for each click across all the templates
-
-t <- t %>%
-  select(db, UID, type, ends_with("thresh"), inev) %>% 
-  mutate(best=pmax(template$Pd_1_thresh, template$Pd_2_thresh, template$Pp_thresh,
-     template$Ksp_thresh))
-  
-# Then join with species and eventId so we can look at distributions across individual events
-
-j1 <- nbhf_clicks %>%
-  distinct(species, db) %>%
-  mutate(db = str_remove(basename(db), " - Copy.sqlite3"))
-
-t <- t %>%
-  left_join(j1, by="db")
-
-t <- nbhf_clicks %>%
-  select(UID, eventId) %>%
-  right_join(t, by="UID")
 ```
 
-These distributions show, probably with a significant difference, that clicks not included in events have lower match scores than those included in events. Suggesting that the script did a good job of placing highly matched clicks in events.
+|        Ksp          |          Pd         |        Pp           |
+|---------------------|---------------------|---------------------|
+| `{r} recall[1, 4]`% | `{r} recall[2, 4]`% | `{r} recall[3, 4]`% |
 
+: Recall of event definition procedure {#tbl-recall}
+
+Precision would be more difficult to estimate. There is a region of overlap in the score distributions of the data that was and was not included (see @fig-match-score-overlap). This suggests sort of a "grey" area where the match is sometimes poor, but with enough other matches could nonetheless warrant an event?
 ```{r}
-#| echo: false
-#| eval: false
-  t %>% 
-    ggplot(aes(x=inev, y=best))+
-    geom_violin()
+#| label: fig-match-score-overlap
+#| fig-cap: Distributions of scores of clicks both included and excluded from the training set.
+
+template %>%
+  mutate(incl = case_when(UID %in% nbhf_clicks$UID ~ TRUE,
+                          .default = FALSE)) %>%
+  ggplot()+
+  geom_density(aes(x=value, fill=incl), alpha=0.4) +
+  facet_wrap(~species)
+
 ```
-
-There are however some high-scoring clicks that did not get included into events, likely because they were isolated and thus did not meet the criteria for an event. To get a sense of just how many high quality clicks were excluded, lets look at the percentile for the threshold value among the not-included clicks
-
+To investigate further I plot to see if there is a relationship between the mean match score of an event and the size of an event. @fig-score-vs-size shows that larger events tend to have higher mean match scores. Looks like a pretty strong positive relationship.
+ 
 ```{r}
-#| echo: false
-#| eval: false
-vals <- data.frame(species = c("pd", "pp","ks"),
-                   threshVal = c(0.45,0.6,0.45))
+#| label: fig-score-vs-size
 
-
-
-#use threshold value for each species in val table above to determine the percentile of the value among all out-of-event clicks
-
-excl <- t %>%
-  filter(inev==FALSE) %>% 
-  nest(data=-species) %>% 
-  inner_join(vals, by = "species") %>%
-  mutate(pctile = map_dbl(.x=data,
-                          .f= ~100-length(.x$best[.x$best < threshVal])/length(.x$best)*100))
-  
+template %>%
+  inner_join(nbhf_clicks, by="UID") %>%
+  group_by(eventId) %>%
+  summarize(n=n(),
+            mean=mean(value)) %>%
+  ggplot()+
+  geom_point(aes(x=n, y=mean))+
+  scale_x_log10()
 ```
 
-We see from this that
+### Discussion points
 
--   for harbor porpoise, {r} excl[excl$species=="pp","pctile"]% of non-event clicks were above the threshold.
-
--   for Dall's porpoise, {r} excl[excl$species=="pd","pctile"]% of non-event clicks were above the threshold.
-
--   for *Kogia*, {r} excl[excl$species=="ks","pctile"]% of non-event clicks were above the threshold.
-
--   Did our methods fail to define any events, that should have been included i.e. did it result in any **False Negatives**?
-
--   Did our methods identify any **False Positives**?
+- Recall is high, which we expected because we deliberately lowered the threshold out of concern for missing valuable data in our training set.
+- Precision is harder to estimate. We might expect precision to have been diminished since we tailored our model to maximize recall.
 
 # 2. Clustering
 
@@ -231,7 +193,7 @@ Next step of the study was to cluster to discover associations between events an
 3.  Density cluster based on clicks @sec-density-clusters
 4.  Density cluster, within species, based on clicks @sec-density-clusters-sp
 
-## Extracting click features from events and comparing species {#sec-PAMpal}
+## Extracting features {#sec-PAMpal}
 
 ### Methodology
 
@@ -241,6 +203,39 @@ Next step of the study was to cluster to discover associations between events an
 -   The training data is saved in the `nbhf_clicks` object @sec-data-nbhf_clicks
 
 ### Results
+
+```{r}
+#| label: fig-ks-concat
+#| fig-cap: "Spectral features of Kogia species class"
+#| fig-subcap: 
+#|   - "Concatenated spectrogram"
+#|   - "Averaged spectrum"
+#| layout-ncol: 2
+
+calculateAverageSpectra(nbhf_studies[["ks"]], evNum=1:length(events(nbhf_studies[["ks"]])))
+```
+
+```{r}
+#| label: fig-pd-concat
+#| fig-cap: "Spectral features of Dall's porpoise class"
+#| fig-subcap: 
+#|   - "Concatenated spectrogram"
+#|   - "Averaged spectrum"
+#| layout-ncol: 2
+
+calculateAverageSpectra(nbhf_studies[["pd"]], evNum=1:length(events(nbhf_studies[["pd"]])))
+```
+
+```{r}
+#| label: fig-pp-concat
+#| fig-cap: "Spectral features of harbor porpoise class"
+#| fig-subcap: 
+#|   - "Concatenated spectrogram"
+#|   - "Averaged spectrum"
+#| layout-ncol: 2
+
+calculateAverageSpectra(nbhf_studies[["pp"]], evNum=1:length(events(nbhf_studies[["pp"]])))
+```
 
 ## Cluster based on event {#sec-ev-clusters}
 
