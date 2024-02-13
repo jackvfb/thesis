@@ -2,8 +2,6 @@
 # 2/7/2024
 # by Jackson VFB
 
-# SETUP -------------------------------------------------------------------
-
 library(tidyverse)
 library(identidrift)
 library(densityClust)

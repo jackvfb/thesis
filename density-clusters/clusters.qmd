@@ -1,0 +1,235 @@
+---
+title: "Check Up on NBHF Clusters"
+author: Jackson
+date: 02/11/2024
+editor: source
+echo: false
+toc: true
+---
+
+# Intro {.unnumbered}
+
+We want to identify clusters within our training set before we make our classifier learn from it. There are two objectives for using unsupervised clustering:
+
+1. Look across species to identify whether species classes form separate clusters. (@sec-one)
+    - The existence of clusters suggests that there are meaningful differences between classes that the classifier can be trained to recognize.
+2. Look within species classes to assess variability among events. (@sec-two)
+    -  The existence of clusters within an individual species class may indicate that there are outlying events with anomalous features that should be excluded from the training set.
+
+In pursuing these objectives, we might also want to consider which observational unit we'd like to use -- **click** or **event**? And would this change depending on which objective we are pursuing?
+
+## Setup
+
+```{r}
+#| output: false
+#| echo: true
+
+library(identidrift) # package with my thesis data. On GitHub, "jackvfb/identidrift"
+library(tidyverse)
+library(vegan)
+library(densityClust)
+
+set.seed(3150)
+```
+
+
+# Objective 1 {#sec-one}
+
+This objective requires us to cluster the entirety of our training data on the same plot, to assess the separation between the different species classes.
+
+There are three different methods shown here:
+
+- Clustering events using community ecology methods @sec-jvb
+- Clustering clicks using MDS @sec-MDS
+- Clustering clicks using density clustering @sec-density
+
+## Clustering Events using `vegdist` {#sec-jvb}
+
+Ecological communities are compared to one another by counting the different species that appear in each community and then generating a dissimilarity index using `vegan::vegdist()`.
+
+I applied this technique towards acoustic events by choosing an initial variable to use for comparison, then binning the clicks based on their values, and finally counting them. For example, if I wanted to compare events on the basis of peak frequency, I would then subdivide the region of the acoustic spectrum from 100-160 kHz to form bins of a chosen width, e.g. 1 kHz. Then, for every event, I would count clicks in each bin (see @fig-bins for an illustration of the resulting distributions)
+
+```{r}
+#| label: fig-bins
+#| fig-cap: "Faceted by species, you can see that each individual line in this plot follows the distribution of peak frequencies for an individual event."
+#| echo: false
+#| 
+nbhf_clicks %>%
+  ggplot(aes(x=peak, color=species, by=eventId))+
+  geom_freqpoly(binwidth=1) +
+  facet_wrap(~species, ncol=1, scale="free")
+```
+
+Once the counts are available for all the events, the dissimilarity index between all events could then be generated using the methods established by community ecologists available through the `vegan` package.
+
+```{r}
+#| results: hide
+#| echo: true
+
+#perform binning procedure using "peak" variable
+pk <- identidrift::eventbin(nbhf_clicks, peak)
+
+#generate distance matrix
+dist <- vegan::vegdist(pk, method = "bray")
+
+#use distance matrix to perform ordination
+nmds <- vegan::metaMDS(dist)
+```
+
+```{r}
+clust <- function(mat, title){
+  dist <- vegdist(mat, method = "bray")
+  nmds <- metaMDS(dist)
+  scores(nmds) %>%
+    as_tibble(rownames = "eventId") %>%
+    left_join(select(nbhf_clicks, species, eventId, eventLabel), by="eventId") %>% 
+    ggplot(aes(x = NMDS1, y = NMDS2, color=species))+
+    geom_point()+
+    # facet_wrap(~eventLabel) +
+    ggtitle(title)
+}
+```
+
+The clusters are then shown in @fig-event-clusters-1, along with plots that show clusters formed using the same procedure but with respect to different variables.
+
+```{r}
+#| label: fig-event-clusters
+#| results: false
+#| fig-cap: "Clusters with respect to different variables where each point represents a different event."
+#| fig-subcap:
+#|   - "peak frequency"
+#|   - "3 dB Bandwidth"
+#|   - "3 dB center frequency"
+
+scores(nmds) %>%
+    as_tibble(rownames = "eventId") %>%
+    left_join(select(nbhf_clicks, species, eventId, eventLabel), by="eventId") %>% 
+    ggplot(aes(x = NMDS1, y = NMDS2, color=species))+
+    geom_point()+
+    # facet_wrap(~eventLabel) +
+    ggtitle("peak")
+
+bw <- eventbin(nbhf_clicks, BW_3dB)
+ctr <- eventbin(nbhf_clicks, centerkHz_3dB)
+clust(bw, "bandwidth 3dB")
+clust(ctr, "centerfreq 3dB")
+```
+
+### Discussion
+
+- Events do appear to cluster by class.
+    - To better visualize the clusters I could plot a centroid and ellipsoid, which I have seen in other plots of this type.
+- This method is probably sensitive to variability in the sizes of the events, so I wonder how results would change if we implemented rarefaction or other methods to make the sample size consistent across all events being compared.
+- The main drawback of this methods seems to be that clusters must be formed based on the distributions in just one dimension. I cannot conceive of how this same procedure could be applied to multi-dimensional data.
+- Additionally, this is not necessarily an accepted method of clustering in this field although, in my view, there are many parallels between "events" and "communities" that could allow for more fruitful investigations into cross-application of different methods.
+
+## Cluster Clicks using MDS {#sec-MDS}
+
+```{r}
+#sample to reduce computational burden
+samp <- nbhf_clicks %>% 
+  group_by(species) %>% 
+  slice_sample(n=200) %>% # select 200 clicks at random from each species
+  ungroup() %>% 
+  select(-c(UID:noiseLevel, BinaryFile:db)) %>% 
+  mutate(id = 1:n()) %>%
+  filter(complete.cases(.))
+
+# define function to perform MDS
+doMDS <- function(x) {
+ 
+   x.dist <- x %>%
+    select(-species) %>%
+    column_to_rownames("id") %>%
+    scale() %>% # important step is to scale
+    dist(method="euclidean")
+  
+  x.mds <- x.dist %>%
+    cmdscale(k=4) %>% # Use max four dimensions
+    as.data.frame %>%
+    setNames(paste0("PC", 1:ncol(.))) %>%
+    mutate(species = x$species)
+  
+  return(x.mds)
+}
+
+# create copy of sample data with redundant variables removed
+samp_drop <- samp %>% 
+  select(id, species, duration:peak, Q_3dB:centerkHz_3dB)
+
+#perform MDS on each data set, with and without redundant variables
+drop <- doMDS(samp_drop)
+not_drop <- doMDS(samp)
+```
+
+If we choose to use clicks as our observational units, then there is no need to devise a procedure or method for handling relationships at the event level.
+
+The clusters shown in @fig-mds-1 are created using multidimensional scaling. The first step implemented here was to sample each class for an equal number of clicks, to reduce the computational burden since the data set in it's entirety has over 4,500 clicks.
+
+After sampling each class, a distance matrix was calculated (Euclidean distance), then scaled, before performing MDS.
+
+As detailed below, it was deemed advantageous to drop some variables in order to eliminate strange artifacts in the MDS plot, which you can see developing in @fig-mds-2. This striping occurs only if the *complete* set of variables is used to calculate the distance matrix.
+
+- Measurements at 10 dB (min and max freq, center freq, Q, etc.) were omitted in favor of the 3 dB measurements.
+- Also, measurements of secondary and tertiary peak frequencies and resulting troughs were also ommited, since not all clicks were the same in this respect.
+- This left a final set of variables given as `{r} names(samp_drop)`
+
+```{r}
+#| label: fig-mds
+#| fig-cap: "Euclidean distances between clicks used for MDS. Species represented by different colors"
+#| fig-subcap:
+#|   - "Redundant variables removed"
+#|   - "No variables removed"
+
+drop %>%
+  ggplot(aes(PC1, PC2, color=species)) +
+  geom_point()
+
+not_drop %>%
+  ggplot(aes(PC1, PC2, color=species)) +
+  geom_point()
+
+```
+
+### Discussion
+
+- Clusters appear to be rather robust
+- Removing so many variables is justified?
+
+## Cluster Clicks using `densityClust` {#sec-density}
+
+```{r}
+#| output: false
+dist <- samp_drop %>%
+  select(-species) %>%
+  column_to_rownames("id") %>%
+  scale() %>% #<1>
+  dist(method="euclidean")
+
+cl <- densityClust(dist)
+cl <- findClusters(cl, rho=5, delta=2)
+```
+1. Calculate distance matrix from data set `samp_drop` with redundant measurements dropped
+2. Distance cutoff calculated as 0.501006
+3. Select rho and delta values as chosen to capture four different groups
+
+Clusters shown in @fig-density-clust
+
+```{r}
+#| label: fig-density-clust
+#| fig-cap: "Density clusters, with distance cutoff calculated as 0.501006. Selected rho=5, delta=2 in order to construct the clusters."
+plotDensityClust(cl)
+```
+
+```{r}
+#| label: tbl-clust-assn
+#| tbl-cap: "Table of cluster assignments"
+table(samp_drop$species, cl$clusters)
+```
+### Discussion
+
+This is, from my experience, a very unstable process for clustering as it seems that output can vary wildly from run to run. In general, I notice that a single cluster can be made, in which case all three classes are overwhelmingly represented by the same cluster. If however, the run varies and multiple clusters are formed (can be 4-6 typically), then pd and pp typically associate with one cluster wheras ks associates with a different cluster, overwhelmingly. I am also slightly confused by this output because the clusters sometimes do not appear to really follow the boundaries that circumscribe the clusters that my own eyes create in the scatter plot, and can often generate strange results.
+
+# Objective 2 {#sec-two}
+
+## Clustering clicks within each species using `densityClust`

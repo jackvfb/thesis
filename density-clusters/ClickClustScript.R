@@ -1,5 +1,5 @@
 # Clustering NBHF Clicks using densityClust
-# 12/19/2023
+# 2/10/2024
 # by Jackson VFB
 
 # In this script I use densityClust to cluster clicks in the NBHF training set.
@@ -15,7 +15,8 @@
 # SETUP -------------------------------------------------------------------
 
 library(tidyverse)
-library(identidrift)
+# next package is my own which is not on CRAN.
+library(identidrift) # Must be installed from my GH "jackvfb/identidrift"
 library(PAMpal)
 library(densityClust)
 library(rfPermute)
@@ -41,71 +42,7 @@ c <- samp %>%
   mutate(id = 1:n()) %>%
   filter(complete.cases(.))
 
-# # separate data into 1, 2, 3, peaked
-# c1 <- c %>%
-#   filter(peak2 == 0) # 1 peak only
-# 
-# c2 <- c %>%
-#   filter(peak2 != 0 & peak3 == 0) # 2 peaks only
-# 
-# c3 <- c %>%
-#   filter(peak3 != 0) # 3 peaks only
-
-
-
-# MDS, by number of Peaks -----------------------------------------------------------
-
-# # make distance matrix, then vizualize clusters using MDS
-# doMDS <- function(x) {
-#   x.dist <- x %>%
-#     select(-species) %>%
-#     column_to_rownames("id") %>%
-#     scale() %>% # important step is to scale
-#     dist()
-#   
-#   x.mds <- x.dist %>%
-#     cmdscale(k=4) %>% # Use max four dimensions
-#     as.data.frame %>%
-#     setNames(paste0("PC", 1:ncol(.))) %>%
-#     mutate(species = x$species)
-#   
-#   return(x.mds)
-# }
-# 
-# c1.mds <- doMDS(c1)
-# c2.mds <- doMDS(c2)
-# c3.mds <- doMDS(c3)
-# 
-# # Some weird artifacts in the clusters. Separation looks weak.
-# c1.mds %>%
-#   ggplot(aes(PC1, PC2, color=species)) +
-#   geom_point()
-# 
-# c2.mds %>%
-#   ggplot(aes(PC1, PC2, color=species)) +
-#   geom_point()
-# 
-# c3.mds %>%
-#   ggplot(aes(PC1, PC2, color=species)) +
-#   geom_point()
-# 
-# # More artifacts. Separation looks weak.
-# c1.mds %>%
-#   ggplot(aes(PC2, PC3, color=species)) +
-#   geom_point()
-# 
-# c2.mds %>%
-#   ggplot(aes(PC2, PC3, color=species)) +
-#   geom_point()
-# 
-# c3.mds %>%
-#   ggplot(aes(PC2, PC3, color=species)) +
-#   geom_point()
-
-# Can also try with all clicks, but there are some banding artifacts
-
 # DENSITY CLUSTERS --------------------------------------------------------
-# Clusters did not appear to separate very well using MDS. Try density clustering.
 
 c.dist <- c %>%
   select(-species) %>%
@@ -114,9 +51,9 @@ c.dist <- c %>%
   dist(method="euclidean")
 
 c.cl <- densityClust(c.dist) # allow dc (aura) to be generated automatically
-c.cl <- findClusters(c.cl, rho=10, delta=4) # user chooses from decision graph at this stage
-plotDensityClust(c.cl) # with four centroids chosen, most of the gamma-plot elbow seems to be captured.
-saveRDS(c.cl, "clusters_v2.rds") # if needed again
+c.cl <- findClusters(c.cl) # user chooses from decision graph at this stage
+plotDensityClust(c.cl)
+# saveRDS(c.cl, "density-clusters/saved_clusters/myCluster.rds")
 table(c$species, c.cl$clusters)
 
 # RANDOM FOREST --------------------------------------------------------------
